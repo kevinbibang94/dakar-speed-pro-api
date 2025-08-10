@@ -71,7 +71,7 @@ def generate_delivery_pdf(data, tracking_code, pdf_path):
             ("Destinataire :", data.get("recipient_info", ""))
         ])
 
-    # Affichage
+    # Affichage des champs
     for label, value in common_fields:
         c.drawString(2*cm, y, f"• {label}")
         c.setFont("Helvetica-Bold", 12)
@@ -86,6 +86,57 @@ def generate_delivery_pdf(data, tracking_code, pdf_path):
     c.drawString(2*cm, y, f"Date de génération : {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
 
     c.save()
+
+# 📌 Page d'accueil (évite le 404 sur Render)
+@app.route('/')
+def home():
+    return """
+    <html>
+    <head>
+        <title>Dakar Speed Pro API</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f9f9f9;
+                color: #333;
+                text-align: center;
+                padding: 50px;
+            }
+            h1 {
+                color: #007BFF;
+            }
+            .endpoint {
+                background-color: #fff;
+                padding: 15px;
+                margin: 20px auto;
+                border-radius: 8px;
+                max-width: 500px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                text-align: left;
+            }
+            code {
+                background-color: #eee;
+                padding: 2px 6px;
+                border-radius: 4px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>🚀 Dakar Speed Pro API</h1>
+        <p>Bienvenue sur l'API officielle de génération de bons de livraison.</p>
+        
+        <div class="endpoint">
+            <h3>📌 Endpoint disponible :</h3>
+            <p><strong>POST</strong> <code>/generate-pdf</code></p>
+            <p>Envoie un JSON avec les informations de livraison et reçoit un lien vers le PDF généré.</p>
+        </div>
+
+        <p style="margin-top:40px; font-size:0.9em; color:#777;">
+            Dakar Speed Pro - Propulsé par Flask & Render
+        </p>
+    </body>
+    </html>
+    """
 
 # 📌 Endpoint pour générer le PDF
 @app.route('/generate-pdf', methods=['POST'])
